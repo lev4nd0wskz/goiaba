@@ -3,13 +3,13 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>arquivo_removido</title>
+<title>nao_existe_2</title>
 
 <style>
 body {
   margin: 0;
   background: black;
-  color: #cfcfcf;
+  color: #d0d0d0;
   font-family: monospace;
   overflow: hidden;
 }
@@ -33,9 +33,9 @@ body::after {
   top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 500px;
-  opacity: 0.25;
-  filter: grayscale(100%) contrast(200%);
+  width: 400px;
+  opacity: 0.3;
+  filter: grayscale(100%) contrast(250%);
 }
 
 /* terminal */
@@ -45,20 +45,19 @@ body::after {
   left: 50%;
   transform: translateX(-50%);
   width: 80%;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.85);
   padding: 20px;
   border: 1px solid #222;
-  font-size: 18px;
 }
 
 /* glitch */
 .glitch {
-  animation: glitch 1s infinite;
+  animation: glitch 0.8s infinite;
 }
 
 @keyframes glitch {
   0% { opacity: 1; }
-  50% { opacity: 0.4; }
+  50% { opacity: 0.3; }
   100% { opacity: 1; }
 }
 </style>
@@ -67,31 +66,33 @@ body::after {
 
 <body onclick="start()">
 
-<!-- imagem imgur (mesmo quebrada) -->
+<!-- imagem nova + fallback -->
 
-<img id="img" src="https://i.imgur.com/8Q2QZ5B.png">
+<img id="img"
+src="https://i.imgur.com/Z6X9ZQw.jpg"
+onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg'">
 
-<div id="terminal">carregando...</div>
+<div id="terminal">...</div>
 
 <script>
 const mensagens = [
-  "carregando imagem...",
-  "erro",
-  "a imagem nao existe mais",
+  "voce voltou",
   "...",
-  "ou foi removida",
+  "eu sabia que voltaria",
   "...",
-  "mas voce ainda esta vendo",
+  "a imagem foi removida",
   "...",
-  "isso nao deveria ser possivel",
+  "mas nao completamente",
   "...",
   "O 35 VAI MATAR MT NO MIX",
   "...",
   "FICA NEGATIVO AI",
   "...",
-  "pare de olhar",
+  "voce ficou olhando tempo demais",
   "...",
-  "ela olha de volta"
+  "agora ela olha de volta",
+  "...",
+  "procure no codigo"
 ];
 
 let i=0, j=0;
@@ -107,7 +108,7 @@ function escrever(){
       j=0;
       i=(i+1)%mensagens.length;
       escrever();
-    }, 2500);
+    }, 2000);
   }
 }
 
@@ -116,25 +117,35 @@ function start(){
 
   const img = document.getElementById("img");
 
-  // imagem instável
-  setInterval(()=>{
-    img.style.opacity = Math.random()*0.5;
-  },2000);
-
-  // glitch
+  // glitch imagem
   setInterval(()=>{
     img.classList.toggle("glitch");
   },1500);
 
+  // piscada estranha
+  setInterval(()=>{
+    img.style.opacity = Math.random()*0.6;
+  },2000);
+
   // voz
   setInterval(()=>{
-    const msg = new SpeechSynthesisUtterance("fica negativo ai");
-    msg.rate = 0.5;
+    const msg = new SpeechSynthesisUtterance("voce voltou");
+    msg.rate = 0.6;
     msg.volume = 0.3;
     msg.lang="pt-BR";
     speechSynthesis.speak(msg);
-  },7000);
+  },6000);
 }
+
+/* =====================
+   MENSAGEM ESCONDIDA 👁️
+   =====================
+
+bmFvX2V4aXN0ZV8zLmh0bWw=
+
+(quem decodificar chega na próxima fase)
+
+*/
 </script>
 
 </body>
