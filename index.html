@@ -3,76 +3,74 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>NEGATIVO.PERTURBADOR</title>
+<title>NEGATIVO.NIVEL.PROIBIDO</title>
 
 <style>
 body {
   margin: 0;
   background: black;
-  color: #d0d0d0;
+  color: #cfcfcf;
   font-family: monospace;
   overflow: hidden;
 }
 
-/* efeito VHS */
+/* VHS pesado */
 body::after {
   content: "";
   position: fixed;
   width: 100%;
   height: 100%;
   background: repeating-linear-gradient(
-    rgba(255,255,255,0.03) 0px,
-    rgba(255,255,255,0.03) 1px,
-    transparent 2px
+    rgba(255,255,255,0.05) 0px,
+    rgba(255,255,255,0.05) 1px,
+    transparent 3px
   );
+  pointer-events: none;
+}
+
+/* escurecendo */
+#dark {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0;
   pointer-events: none;
 }
 
 /* terminal */
 #terminal {
   position: absolute;
-  top: 60%;
+  top: 65%;
   left: 50%;
-  width: 80%;
   transform: translate(-50%, -50%);
-  background: rgba(0,0,0,0.75);
+  width: 80%;
+  background: rgba(0,0,0,0.8);
   padding: 20px;
-  border: 1px solid #333;
+  border: 1px solid #222;
   font-size: 20px;
-  line-height: 1.6;
 }
 
-/* rosto fundo */
+/* rosto */
 #face {
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 400px;
+  width: 500px;
   transform: translate(-50%, -50%);
   opacity: 0;
-  filter: grayscale(100%) contrast(200%);
-  transition: opacity 5s;
-  z-index: -1;
+  filter: grayscale(100%) contrast(300%);
 }
 
-/* glitch leve */
+/* glitch */
 .glitch {
-  animation: glitch 2s infinite;
+  animation: glitch 1.5s infinite;
 }
 
 @keyframes glitch {
   0% { opacity: 1; }
-  50% { opacity: 0.6; }
+  50% { opacity: 0.5; }
   100% { opacity: 1; }
-}
-
-/* jumpscare */
-#jumpscare {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  display: none;
-  z-index: 999;
 }
 </style>
 
@@ -80,82 +78,89 @@ body::after {
 
 <body onclick="start()">
 
+<div id="dark"></div>
+
 <img id="face" src="https://i.imgur.com/8Q2QZ5B.png">
-<img id="jumpscare" src="https://i.imgur.com/8Q2QZ5B.png">
 
 <div id="terminal">[ clique ]</div>
 
 <script>
-const mensagens = [
+const hora = new Date().getHours();
+
+let mensagens = [
   "EU SOU GOIABA TF2 E SOU NEGATIVO...",
-  "...",
-  "VOCÊ ESTÁ SOZINHO?",
-  "...",
   "FICA NEGATIVO AÍ...",
-  "...",
-  "O 35 VAI MATAR MT NO MIX...",
+  "O 35 VAI MATAR MT NO MIX..."
+];
+
+// muda dependendo da hora
+if(hora >= 0 && hora < 6){
+  mensagens.push("VOCÊ NÃO DEVERIA ESTAR ACORDADO...");
+}
+if(hora >= 18){
+  mensagens.push("ESTÁ ESCURO AÍ, NÃO ESTÁ?");
+}
+
+mensagens.push(
   "...",
   "EU CONSIGO TE VER",
   "...",
-  "NÃO OLHE PARA TRÁS",
+  "NÃO É SÓ UMA TELA",
   "...",
-  "TARDE DEMAIS"
-];
+  "OLHE MAIS DE PERTO"
+);
 
-let i = 0, j = 0;
+let i=0, j=0;
 const term = document.getElementById("terminal");
 
 function escrever(){
   if(j < mensagens[i].length){
     term.innerHTML = mensagens[i].substring(0, j+1);
     j++;
-    setTimeout(escrever, 70);
+    setTimeout(escrever, 80);
   } else {
     setTimeout(()=>{
-      j = 0;
-      i = (i+1)%mensagens.length;
+      j=0;
+      i=(i+1)%mensagens.length;
       escrever();
-    }, 2000 + Math.random()*2000);
+    }, 3000 + Math.random()*2000);
   }
 }
 
 function start(){
   escrever();
 
-  // rosto aparece devagar
-  setTimeout(()=>{
-    document.getElementById("face").style.opacity = 0.15;
-  },5000);
+  const face = document.getElementById("face");
+  const dark = document.getElementById("dark");
 
-  // aumenta presença
-  setInterval(()=>{
-    const face = document.getElementById("face");
-    face.style.opacity = Math.random()*0.3;
+  // rosto surge lentamente
+  setTimeout(()=>{
+    face.style.opacity = 0.1;
   },4000);
 
-  // voz perturbadora
   setInterval(()=>{
-    const msg = new SpeechSynthesisUtterance("fica negativo ai");
-    msg.rate = 0.6;
-    msg.pitch = 0.5;
-    msg.volume = 0.4;
-    msg.lang="pt-BR";
-    speechSynthesis.speak(msg);
-  },7000);
-
-  // jumpscare raro
-  setInterval(()=>{
-    if(Math.random() > 0.85){
-      const j = document.getElementById("jumpscare");
-      j.style.display="block";
-      setTimeout(()=>j.style.display="none",150);
-    }
+    face.style.opacity = Math.random()*0.4;
   },5000);
 
-  // glitch no texto
+  // tela escurecendo
+  setInterval(()=>{
+    dark.style.opacity = Math.min(1, parseFloat(dark.style.opacity || 0) + 0.02);
+  },4000);
+
+  // voz quase inaudível
+  setInterval(()=>{
+    const msg = new SpeechSynthesisUtterance("fica negativo ai");
+    msg.volume = 0.2;
+    msg.rate = 0.5;
+    msg.pitch = 0.4;
+    msg.lang="pt-BR";
+    speechSynthesis.speak(msg);
+  },8000);
+
+  // glitch ocasional
   setInterval(()=>{
     term.classList.toggle("glitch");
-  },3000);
+  },4000);
 }
 </script>
 
