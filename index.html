@@ -3,7 +3,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>NEGATIVO.NIVEL.PROIBIDO</title>
+<title>arquivo_removido</title>
 
 <style>
 body {
@@ -14,62 +14,51 @@ body {
   overflow: hidden;
 }
 
-/* VHS pesado */
+/* VHS */
 body::after {
   content: "";
   position: fixed;
   width: 100%;
   height: 100%;
   background: repeating-linear-gradient(
-    rgba(255,255,255,0.05) 0px,
-    rgba(255,255,255,0.05) 1px,
+    rgba(255,255,255,0.04) 0px,
+    rgba(255,255,255,0.04) 1px,
     transparent 3px
   );
-  pointer-events: none;
 }
 
-/* escurecendo */
-#dark {
+/* imagem */
+#img {
   position: fixed;
-  width: 100%;
-  height: 100%;
-  background: black;
-  opacity: 0;
-  pointer-events: none;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  opacity: 0.25;
+  filter: grayscale(100%) contrast(200%);
 }
 
 /* terminal */
 #terminal {
   position: absolute;
-  top: 65%;
+  bottom: 10%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   width: 80%;
   background: rgba(0,0,0,0.8);
   padding: 20px;
   border: 1px solid #222;
-  font-size: 20px;
-}
-
-/* rosto */
-#face {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 500px;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  filter: grayscale(100%) contrast(300%);
+  font-size: 18px;
 }
 
 /* glitch */
 .glitch {
-  animation: glitch 1.5s infinite;
+  animation: glitch 1s infinite;
 }
 
 @keyframes glitch {
   0% { opacity: 1; }
-  50% { opacity: 0.5; }
+  50% { opacity: 0.4; }
   100% { opacity: 1; }
 }
 </style>
@@ -78,37 +67,32 @@ body::after {
 
 <body onclick="start()">
 
-<div id="dark"></div>
+<!-- imagem imgur (mesmo quebrada) -->
 
-<img id="face" src="https://i.imgur.com/8Q2QZ5B.png">
+<img id="img" src="https://i.imgur.com/8Q2QZ5B.png">
 
-<div id="terminal">[ clique ]</div>
+<div id="terminal">carregando...</div>
 
 <script>
-const hora = new Date().getHours();
-
-let mensagens = [
-  "EU SOU GOIABA TF2 E SOU NEGATIVO...",
-  "FICA NEGATIVO AÍ...",
-  "O 35 VAI MATAR MT NO MIX..."
+const mensagens = [
+  "carregando imagem...",
+  "erro",
+  "a imagem nao existe mais",
+  "...",
+  "ou foi removida",
+  "...",
+  "mas voce ainda esta vendo",
+  "...",
+  "isso nao deveria ser possivel",
+  "...",
+  "O 35 VAI MATAR MT NO MIX",
+  "...",
+  "FICA NEGATIVO AI",
+  "...",
+  "pare de olhar",
+  "...",
+  "ela olha de volta"
 ];
-
-// muda dependendo da hora
-if(hora >= 0 && hora < 6){
-  mensagens.push("VOCÊ NÃO DEVERIA ESTAR ACORDADO...");
-}
-if(hora >= 18){
-  mensagens.push("ESTÁ ESCURO AÍ, NÃO ESTÁ?");
-}
-
-mensagens.push(
-  "...",
-  "EU CONSIGO TE VER",
-  "...",
-  "NÃO É SÓ UMA TELA",
-  "...",
-  "OLHE MAIS DE PERTO"
-);
 
 let i=0, j=0;
 const term = document.getElementById("terminal");
@@ -117,52 +101,42 @@ function escrever(){
   if(j < mensagens[i].length){
     term.innerHTML = mensagens[i].substring(0, j+1);
     j++;
-    setTimeout(escrever, 80);
+    setTimeout(escrever, 60);
   } else {
     setTimeout(()=>{
       j=0;
       i=(i+1)%mensagens.length;
       escrever();
-    }, 3000 + Math.random()*2000);
+    }, 2500);
   }
 }
 
 function start(){
   escrever();
 
-  const face = document.getElementById("face");
-  const dark = document.getElementById("dark");
+  const img = document.getElementById("img");
 
-  // rosto surge lentamente
-  setTimeout(()=>{
-    face.style.opacity = 0.1;
-  },4000);
-
+  // imagem instável
   setInterval(()=>{
-    face.style.opacity = Math.random()*0.4;
-  },5000);
+    img.style.opacity = Math.random()*0.5;
+  },2000);
 
-  // tela escurecendo
+  // glitch
   setInterval(()=>{
-    dark.style.opacity = Math.min(1, parseFloat(dark.style.opacity || 0) + 0.02);
-  },4000);
+    img.classList.toggle("glitch");
+  },1500);
 
-  // voz quase inaudível
+  // voz
   setInterval(()=>{
     const msg = new SpeechSynthesisUtterance("fica negativo ai");
-    msg.volume = 0.2;
     msg.rate = 0.5;
-    msg.pitch = 0.4;
+    msg.volume = 0.3;
     msg.lang="pt-BR";
     speechSynthesis.speak(msg);
-  },8000);
-
-  // glitch ocasional
-  setInterval(()=>{
-    term.classList.toggle("glitch");
-  },4000);
+  },7000);
 }
 </script>
 
 </body>
 </html>
+
