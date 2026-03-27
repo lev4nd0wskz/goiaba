@@ -3,67 +3,67 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>NEGATIVO FINAL</title>
+<title>NEGATIVO.PERTURBADOR</title>
 
 <style>
 body {
   margin: 0;
   background: black;
-  color: #00ff00;
+  color: #d0d0d0;
   font-family: monospace;
   overflow: hidden;
-  animation: invert 0.15s infinite alternate;
 }
 
-/* matrix */
-canvas {
+/* efeito VHS */
+body::after {
+  content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    rgba(255,255,255,0.03) 0px,
+    rgba(255,255,255,0.03) 1px,
+    transparent 2px
+  );
+  pointer-events: none;
 }
 
 /* terminal */
 #terminal {
   position: absolute;
-  top: 40%;
+  top: 60%;
   left: 50%;
+  width: 80%;
   transform: translate(-50%, -50%);
-  text-align: center;
-  animation: shake 0.05s infinite;
+  background: rgba(0,0,0,0.75);
+  padding: 20px;
+  border: 1px solid #333;
+  font-size: 20px;
+  line-height: 1.6;
 }
 
-/* barra fake */
-#progressBox {
-  position: absolute;
-  bottom: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  border: 2px solid red;
-  display: none;
-}
-
-#progress {
-  width: 0%;
-  height: 20px;
-  background: red;
-}
-
-/* hacked */
-#hacked {
+/* rosto fundo */
+#face {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: black;
-  color: red;
-  display: none;
-  font-size: 60px;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  filter: grayscale(100%) contrast(200%);
+  transition: opacity 5s;
+  z-index: -1;
+}
+
+/* glitch leve */
+.glitch {
+  animation: glitch 2s infinite;
+}
+
+@keyframes glitch {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
 }
 
 /* jumpscare */
@@ -72,126 +72,90 @@ canvas {
   width: 100%;
   height: 100%;
   display: none;
-  z-index: 1000;
-}
-
-/* popup */
-.popup {
-  position: absolute;
-  background: red;
-  color: white;
-  padding: 8px;
-  font-size: 12px;
-}
-
-/* animações */
-@keyframes shake {
-  0% { transform: translate(-50%, -50%) translate(0,0); }
-  50% { transform: translate(-50%, -50%) translate(10px,-10px); }
-  100% { transform: translate(-50%, -50%) translate(-10px,10px); }
-}
-
-@keyframes invert {
-  0% { filter: invert(0); }
-  100% { filter: invert(1); }
+  z-index: 999;
 }
 </style>
 
 </head>
 
-<body onclick="startChaos()">
+<body onclick="start()">
 
-<canvas id="matrix"></canvas>
-
-<div id="terminal">CLIQUE PARA INICIAR...</div>
-
-<div id="progressBox">
-  <div id="progress"></div>
-</div>
-
-<div id="hacked">SISTEMA DESTRUIDO</div>
-
+<img id="face" src="https://i.imgur.com/8Q2QZ5B.png">
 <img id="jumpscare" src="https://i.imgur.com/8Q2QZ5B.png">
 
-<audio id="som" loop>
-  <source src="https://www.myinstants.com/media/sounds/windows-error.mp3">
-</audio>
+<div id="terminal">[ clique ]</div>
 
 <script>
-// matrix
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
+const mensagens = [
+  "EU SOU GOIABA TF2 E SOU NEGATIVO...",
+  "...",
+  "VOCÊ ESTÁ SOZINHO?",
+  "...",
+  "FICA NEGATIVO AÍ...",
+  "...",
+  "O 35 VAI MATAR MT NO MIX...",
+  "...",
+  "EU CONSIGO TE VER",
+  "...",
+  "NÃO OLHE PARA TRÁS",
+  "...",
+  "TARDE DEMAIS"
+];
 
-canvas.height = innerHeight;
-canvas.width = innerWidth;
+let i = 0, j = 0;
+const term = document.getElementById("terminal");
 
-const letters = "NEGATIVO01";
-const fontSize = 14;
-const columns = canvas.width / fontSize;
-const drops = Array(columns).fill(1);
+function escrever(){
+  if(j < mensagens[i].length){
+    term.innerHTML = mensagens[i].substring(0, j+1);
+    j++;
+    setTimeout(escrever, 70);
+  } else {
+    setTimeout(()=>{
+      j = 0;
+      i = (i+1)%mensagens.length;
+      escrever();
+    }, 2000 + Math.random()*2000);
+  }
+}
 
-setInterval(() => {
-  ctx.fillStyle = "rgba(0,0,0,0.05)";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+function start(){
+  escrever();
 
-  ctx.fillStyle = "#00ff00";
-  ctx.font = fontSize+"px monospace";
+  // rosto aparece devagar
+  setTimeout(()=>{
+    document.getElementById("face").style.opacity = 0.15;
+  },5000);
 
-  drops.forEach((y,i)=>{
-    const text = letters[Math.random()*letters.length|0];
-    ctx.fillText(text,i*fontSize,y*fontSize);
-    if(y*fontSize>canvas.height && Math.random()>0.97) drops[i]=0;
-    drops[i]++;
-  });
-},30);
-
-// caos
-function startChaos(){
-  document.getElementById("som").play();
-
-  const frases = [
-    "fica negativo ai",
-    "voce perdeu o sistema",
-    "o 35 vai matar muito no mix"
-  ];
-
+  // aumenta presença
   setInterval(()=>{
-    const msg = new SpeechSynthesisUtterance(frases[Math.random()*frases.length|0]);
+    const face = document.getElementById("face");
+    face.style.opacity = Math.random()*0.3;
+  },4000);
+
+  // voz perturbadora
+  setInterval(()=>{
+    const msg = new SpeechSynthesisUtterance("fica negativo ai");
+    msg.rate = 0.6;
+    msg.pitch = 0.5;
+    msg.volume = 0.4;
     msg.lang="pt-BR";
     speechSynthesis.speak(msg);
-  },2000);
+  },7000);
 
-  // barra fake
-  const box = document.getElementById("progressBox");
-  const bar = document.getElementById("progress");
-  box.style.display="block";
-
-  let p = 0;
-  const load = setInterval(()=>{
-    p += Math.random()*5;
-    bar.style.width = p+"%";
-    if(p>=100){
-      clearInterval(load);
-      document.getElementById("hacked").style.display="flex";
+  // jumpscare raro
+  setInterval(()=>{
+    if(Math.random() > 0.85){
+      const j = document.getElementById("jumpscare");
+      j.style.display="block";
+      setTimeout(()=>j.style.display="none",150);
     }
-  },200);
+  },5000);
 
-  // popups
+  // glitch no texto
   setInterval(()=>{
-    const d = document.createElement("div");
-    d.className="popup";
-    d.innerText="ERRO";
-    d.style.left=Math.random()*100+"%";
-    d.style.top=Math.random()*100+"%";
-    document.body.appendChild(d);
-  },200);
-
-  // jumpscare
-  setInterval(()=>{
-    const j=document.getElementById("jumpscare");
-    j.style.display="block";
-    setTimeout(()=>j.style.display="none",150);
-  },2500);
+    term.classList.toggle("glitch");
+  },3000);
 }
 </script>
 
