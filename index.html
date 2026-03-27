@@ -3,7 +3,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>negativo_trol</title>
+<title>NEGATIVO_TROL_MAX</title>
 
 <style>
 body {
@@ -20,21 +20,40 @@ body {
 }
 
 #box {
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.9);
   padding: 30px;
   border: 2px solid #00ff88;
+  width: 80%;
 }
 
-.glitch {
-  animation: glitch 0.3s infinite;
+button {
+  position: relative;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: black;
+  color: #00ff88;
+  border: 1px solid #00ff88;
+  cursor: pointer;
 }
 
-@keyframes glitch {
-  0% { transform: translate(0); }
-  25% { transform: translate(2px, -2px); }
-  50% { transform: translate(-2px, 2px); }
-  75% { transform: translate(2px, 2px); }
-  100% { transform: translate(-2px, -2px); }
+button:hover {
+  background: #00ff88;
+  color: black;
+}
+
+#fakeHack {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  color: red;
+  font-size: 40px;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
 </style>
 
@@ -43,20 +62,71 @@ body {
 <body>
 
 <div id="box">
-  <h1 class="glitch">ERRO 404 KKKKK</h1>
-  <p>a imagem não existe… ou foi de base 💀</p>
+  <h1>ERRO 404 KKKKK</h1>
+  <p id="msg">a imagem foi de base 💀</p>
   <p>FICA NEGATIVO AÍ 😎</p>
   <p>O 35 VAI MATAR MT NO MIX 🔥</p>
+
+  <p>Cliques: <span id="count">0</span></p>
+
+<button id="btn">CLICA AQUI NÃO 😈</button>
+
 </div>
 
+<div id="fakeHack">💀 VOCÊ FOI HACKEADO 💀<br>brinks kkkkk</div>
+
+<audio id="som">
+  <source src="https://www.myinstants.com/media/sounds/windows-error.mp3">
+</audio>
+
 <script>
-// zoeira piscando
+let clicks = 0;
+const btn = document.getElementById("btn");
+const msg = document.getElementById("msg");
+
+const msgs = [
+  "KKKK caiu de novo",
+  "para de clicar mano 😂",
+  "negativo ativado 😈",
+  "35 no mix 🔥",
+  "você não aprende né"
+];
+
+// botão foge
+btn.addEventListener("mouseover", () => {
+  btn.style.position = "absolute";
+  btn.style.left = Math.random()*80 + "%";
+  btn.style.top = Math.random()*80 + "%";
+});
+
+// clique
+btn.addEventListener("click", () => {
+  clicks++;
+  document.getElementById("count").innerText = clicks;
+
+  msg.innerText = msgs[Math.floor(Math.random()*msgs.length)];
+
+  document.getElementById("som").play();
+
+  // fundo piscando
+  document.body.style.background =
+    Math.random()>0.5 ? "#001100" : "black";
+
+  // hack fake depois de vários cliques
+  if(clicks >= 7){
+    document.getElementById("fakeHack").style.display = "flex";
+    setTimeout(()=>{
+      document.getElementById("fakeHack").style.display = "none";
+    },2000);
+  }
+});
+
+// fundo glitch leve
 setInterval(()=>{
-  document.body.style.background = 
-    Math.random() > 0.5 ? "black" : "#111";
-},500);
+  document.body.style.background =
+    Math.random()>0.95 ? "#002200" : "black";
+},200);
 </script>
 
 </body>
 </html>
-
