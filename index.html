@@ -1,56 +1,199 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Negativo</title>
-  <style>
-    body {
-      margin: 0;
-      background: black;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
+<meta charset="UTF-8">
+<title>NEGATIVO FINAL</title>
 
-    .container {
-      text-align: center;
-      animation: piscar 0.5s infinite alternate;
-    }
+<style>
+body {
+  margin: 0;
+  background: black;
+  color: #00ff00;
+  font-family: monospace;
+  overflow: hidden;
+  animation: invert 0.15s infinite alternate;
+}
 
-    h1 {
-      font-size: 3rem;
-      margin: 0;
-      text-transform: uppercase;
-    }
+/* matrix */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
 
-    p {
-      font-size: 1.8rem;
-      margin-top: 20px;
-      color: red;
-      font-weight: bold;
-    }
+/* terminal */
+#terminal {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  animation: shake 0.05s infinite;
+}
 
-    @keyframes piscar {
-      0% {
-        opacity: 1;
-        transform: scale(1);
-      }
-      100% {
-        opacity: 0.2;
-        transform: scale(1.05);
-      }
-    }
-  </style>
+/* barra fake */
+#progressBox {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  border: 2px solid red;
+  display: none;
+}
+
+#progress {
+  width: 0%;
+  height: 20px;
+  background: red;
+}
+
+/* hacked */
+#hacked {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  color: red;
+  display: none;
+  font-size: 60px;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* jumpscare */
+#jumpscare {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: none;
+  z-index: 1000;
+}
+
+/* popup */
+.popup {
+  position: absolute;
+  background: red;
+  color: white;
+  padding: 8px;
+  font-size: 12px;
+}
+
+/* animações */
+@keyframes shake {
+  0% { transform: translate(-50%, -50%) translate(0,0); }
+  50% { transform: translate(-50%, -50%) translate(10px,-10px); }
+  100% { transform: translate(-50%, -50%) translate(-10px,10px); }
+}
+
+@keyframes invert {
+  0% { filter: invert(0); }
+  100% { filter: invert(1); }
+}
+</style>
+
 </head>
-<body>
-  <div class="container">
-    <h1>EU SOU GOIABA TF2 E SOU NEGATIVO</h1>
-    <p>FICA NEGATIVO AÍ</p>
-  </div>
+
+<body onclick="startChaos()">
+
+<canvas id="matrix"></canvas>
+
+<div id="terminal">CLIQUE PARA INICIAR...</div>
+
+<div id="progressBox">
+  <div id="progress"></div>
+</div>
+
+<div id="hacked">SISTEMA DESTRUIDO</div>
+
+<img id="jumpscare" src="https://i.imgur.com/8Q2QZ5B.png">
+
+<audio id="som" loop>
+  <source src="https://www.myinstants.com/media/sounds/windows-error.mp3">
+</audio>
+
+<script>
+// matrix
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.height = innerHeight;
+canvas.width = innerWidth;
+
+const letters = "NEGATIVO01";
+const fontSize = 14;
+const columns = canvas.width / fontSize;
+const drops = Array(columns).fill(1);
+
+setInterval(() => {
+  ctx.fillStyle = "rgba(0,0,0,0.05)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle = "#00ff00";
+  ctx.font = fontSize+"px monospace";
+
+  drops.forEach((y,i)=>{
+    const text = letters[Math.random()*letters.length|0];
+    ctx.fillText(text,i*fontSize,y*fontSize);
+    if(y*fontSize>canvas.height && Math.random()>0.97) drops[i]=0;
+    drops[i]++;
+  });
+},30);
+
+// caos
+function startChaos(){
+  document.getElementById("som").play();
+
+  const frases = [
+    "fica negativo ai",
+    "voce perdeu o sistema",
+    "o 35 vai matar muito no mix"
+  ];
+
+  setInterval(()=>{
+    const msg = new SpeechSynthesisUtterance(frases[Math.random()*frases.length|0]);
+    msg.lang="pt-BR";
+    speechSynthesis.speak(msg);
+  },2000);
+
+  // barra fake
+  const box = document.getElementById("progressBox");
+  const bar = document.getElementById("progress");
+  box.style.display="block";
+
+  let p = 0;
+  const load = setInterval(()=>{
+    p += Math.random()*5;
+    bar.style.width = p+"%";
+    if(p>=100){
+      clearInterval(load);
+      document.getElementById("hacked").style.display="flex";
+    }
+  },200);
+
+  // popups
+  setInterval(()=>{
+    const d = document.createElement("div");
+    d.className="popup";
+    d.innerText="ERRO";
+    d.style.left=Math.random()*100+"%";
+    d.style.top=Math.random()*100+"%";
+    document.body.appendChild(d);
+  },200);
+
+  // jumpscare
+  setInterval(()=>{
+    const j=document.getElementById("jumpscare");
+    j.style.display="block";
+    setTimeout(()=>j.style.display="none",150);
+  },2500);
+}
+</script>
+
 </body>
 </html>
